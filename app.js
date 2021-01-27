@@ -5,24 +5,18 @@ const mongoose = require('mongoose');
 app.use(cookieParser());
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost27017/mernauth', {useNewUrlParser : true, useUnifiedTopology : true}, ()=> {
+const url = 'mongodb+srv://doug:blah@cluster0.gp78l.mongodb.net/mern-jwt?retryWrites=true&w=majority';
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true }, () => {
     console.log('successfully connected to DB');
 });
 
-const User = require('./models/User');
+const userRouter = require('./routes/User');
+app.use('/user', userRouter);
 
-const userInput = {
-    username: 'noobcoder1234',
-    password: '123',
-    role: 'admin'
-}
+// mongoose.connect('mongodb://localhost27017/mernauth', {useNewUrlParser : true, useUnifiedTopology : true}, ()=> {
+// });
 
-const user = new User(userInput);
-user.save((err, document) => {
-    if(err)
-        console.log;
-    console.log(document);
-});
+
 
 app.listen(5000, ()=> {
     console.log('express server started');
