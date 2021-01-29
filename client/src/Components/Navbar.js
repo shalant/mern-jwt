@@ -7,7 +7,7 @@ const Navbar = props => {
     const { isAuthenticated, user, setIsAuthenticated, setUser } = useContext(AuthContext);
 
     const onClickLogoutHandler = () => {
-        AuthContext.logout().then(data => {
+        AuthService.logout().then(data => {
             if(data.success) {
                 setUser(data.user);
                 setIsAuthenticated(false);

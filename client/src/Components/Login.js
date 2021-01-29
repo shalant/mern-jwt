@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import AuthService from '../Services/AuthService';
 import Message from '../Components/Message';
-import { AuthContext } from '../Context/AuthContext';
 
 const Login = props => {
     const [user, setUser] = useState({username: '', password: ''});
@@ -14,6 +14,21 @@ const Login = props => {
         console.log(user)
     }
 
+    const onSubmit = e => {
+        e.preventDefault();
+        AuthService.login(user).then(data => {
+            console.log(data);
+            const { isAuthenticated, user, message } = data;
+            if(isAuthenticated) {
+                authContext.setUser(user);
+                authContext.setIsAuthenticated(isAuthenticated);
+                props.history.push('/todos');
+            } else
+                setMessage(message);
+            
+        });
+    }
+
     return(
         <div>
             <form onSubmit={onSubmit}>
@@ -23,21 +38,21 @@ const Login = props => {
                     name='username' 
                     onChange={onChange} 
                     className='form-control' 
-                    placeholder='Enter Username'
-                />
+                    placeholder='Enter Username' />
                 <label htmlFor='password' className='sr-only'>Password: </label>
-                <input type='text' 
+                <input type='password' 
                     name='password' 
                     onChange={onChange} 
                     className='form-control' 
-                    placeholder='Enter Password'
-                />
+                    placeholder='Enter Password' />
                 <button className='btn btn-lg btn-primary btn-block' 
                     type='submit'>Login</button>
+                {message ? <Message message={message}/> : null}
             </form>
-            {message ? <Message message={message}/> : null}
+            
         </div>
     )
 }
 
 export default Login;
+
